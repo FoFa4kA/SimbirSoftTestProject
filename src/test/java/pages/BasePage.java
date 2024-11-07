@@ -7,7 +7,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-import static constants.Constant.Timeouts.EXPLICIT_WAIT;
+import static util.PropertiesUtil.getProp;
 
 public class BasePage {
     protected WebDriver driver;
@@ -21,7 +21,8 @@ public class BasePage {
     }
 
     public WebElement waitElementToBeVisible(WebElement element) {
-        new WebDriverWait(driver, Duration.ofSeconds(EXPLICIT_WAIT)).until(ExpectedConditions.visibilityOf(element));
+        new WebDriverWait(driver, Duration.ofSeconds(Long.parseLong(getProp("explicit_wait"))))
+                .until(ExpectedConditions.visibilityOf(element));
         return element;
     }
 }

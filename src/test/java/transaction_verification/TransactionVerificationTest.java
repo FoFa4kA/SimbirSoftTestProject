@@ -1,37 +1,36 @@
 package transaction_verification;
 
 import base.BaseTest;
+import io.qameta.allure.*;
 import org.testng.annotations.Test;
 
-import static constants.Constant.Urls.HOME_PAGE;
 import static util.AddAttachment.getBytesAnnotationWithArgs;
 import static util.DayOfMonth.getCurrentDayOfMonth;
 import static util.FibonacciNumber.getFibonacciNumber;
+import static util.PropertiesUtil.getProp;
 
 public class TransactionVerificationTest extends BaseTest {
 
     @Test
+
+    @Epic(value = "Online bank")
+    @Story(value = "LogIn and transactions")
+    @Severity(value = SeverityLevel.CRITICAL)
+    @Description(value = "The test logs in, makes transactions, checks the balance and writes transaction data to a file")
     public void madeAndCheckTransactions() {
-        basePage.open(HOME_PAGE);
+        int currentDayOfMonthPlusOne = getCurrentDayOfMonth() + 1;
+        String fibonacciNumber = String.valueOf(getFibonacciNumber(currentDayOfMonthPlusOne));
+        String zeroBalance = "0";
 
-        loginPage.clickCustomerLoginButton();
+        basePage.open(getProp("home_page"));
 
-        customerPage
+        loginPage.clickCustomerLoginButton()
                 .selectUser()
-                .clickLoginButton();
-
-        int currentDayOfMonth = getCurrentDayOfMonth();
-        String fibonacciNumber = String.valueOf(getFibonacciNumber(currentDayOfMonth + 1));
-
-        accountPage
+                .clickLoginButton()
                 .makeDeposit(fibonacciNumber)
-                .wait(1000)
                 .makeWithdrawl(fibonacciNumber)
-                .wait(1000)
-                .checkBalance("0")
-                .clickTransactionsButton();
-
-        listTxPage
+                .checkBalance(zeroBalance)
+                .clickTransactionsButton()
                 .checkTransactions()
                 .writeTransactionsDataToCsv();
 

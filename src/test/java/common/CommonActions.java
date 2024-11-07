@@ -10,14 +10,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
 
-import static common.Config.PLATFORM_AND_BROWSER;
-import static constants.Constant.Timeouts.IMPLICIT_WAIT;
+import static util.PropertiesUtil.getProp;
 
 public class CommonActions {
     public static WebDriver createDriver() {
         WebDriver driver = null;
+        String platformAndBrowser = getProp("win10_chrome");
 
-        switch (PLATFORM_AND_BROWSER) {
+        switch (platformAndBrowser) {
             case "windows10_chrome":
                 DesiredCapabilities capabilities = new DesiredCapabilities();
                 capabilities.setBrowserName("chrome");
@@ -29,9 +29,9 @@ public class CommonActions {
                 }
                 break;
             default:
-                Assert.fail("Unsupported platform: " + PLATFORM_AND_BROWSER);
+                Assert.fail("Unsupported platform: " + platformAndBrowser);
         }
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(Long.parseLong(getProp("implicit_wait"))));
         return driver;
     }
 }
